@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>edu.osu.cse4471</groupId>
-	<artifactId>iam-tool</artifactId>
+	<artifactId>iam-tools</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>iam-tool</name>
 	<description>IAM tool for OSU CSE 4471 project submission.</description>

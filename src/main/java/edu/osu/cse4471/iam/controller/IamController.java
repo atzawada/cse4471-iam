@@ -2,48 +2,58 @@ package edu.osu.cse4471.iam.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/iam")
 public class IamController {
 
     @PostMapping("/createAccount")
-    public void createAccount(String shortname, String fullName) {
+    @ResponseBody
+    public void createAccount(@RequestParam String shortname, @RequestParam String fullName) {
 
     }
 
     @PostMapping("/login")
-    public void login(String shortname, String password) {
+    @ResponseBody
+    public void login(@RequestParam String shortname, @RequestParam String password) {
 
     }
 
     @PostMapping("/addRole")
-    public void addRole(String shortname, String roleName, String token) {
+    @ResponseBody
+    public void addRole(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String token) {
 
     }
     
     @PostMapping("/removeRole")
-    public void removeRole(String shortname, String roleName, String token) {
+    @ResponseBody
+    public void removeRole(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String token) {
 
     }
 
     @PostMapping("/createRole")
-    public void createRole(String roleName, String description, String token) {
+    @ResponseBody
+    public void createRole(@RequestParam String roleName, @RequestParam String description, @RequestParam String token) {
 
     }
 
     @PostMapping("/deleteRole")
-    public void deleteRole(String roleName, String token) {
+    @ResponseBody
+    public void deleteRole(@RequestParam String roleName, @RequestParam String token) {
 
     }
 
     @GetMapping("/authenticate")
-    public void authenticate(String shortname, String roleName, String token) {
+    @ResponseBody
+    public void authenticate(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String token) {
 
     }
 
     @GetMapping("/getMembers")
-    public void getGroupMembers(String roleName, String token) {
+    @ResponseBody
+    public void getGroupMembers(@RequestParam String roleName, @RequestParam String token) {
 
     }
 }
