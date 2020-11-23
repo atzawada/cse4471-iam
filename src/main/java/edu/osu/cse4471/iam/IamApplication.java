@@ -1,4 +1,4 @@
-package edu.osu.cse4471.iamtool;
+package edu.osu.cse4471.iam;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class IamApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IamToolApplication.class, args);
+		SpringApplication.run(IamApplication.class, args);
 	}
 
 }
