@@ -1,5 +1,6 @@
 package edu.osu.cse4471.iam.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,6 +52,12 @@ public class RoleDao {
     public boolean checkRule(String user, String role) {
         SqlRowSet rs = this.jdbcTemplate.queryForRowSet("SELECT * FROM mydb.rules WHERE NAME = :user AND ROLE = :rule", new Object[] {user, role});
         return rs.next();
+    }
+
+    public List<User> getGroupMembers(String roleName) {
+        return this.jdbcTemplate.query("SELECT * FROM mydb.rules INNER JOIN mydb.user on mydb.rules.user = mydb.user.username WHERE name = :username", (rs, rownum) -> {
+            return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+        }, roleName);
     }
 
 
