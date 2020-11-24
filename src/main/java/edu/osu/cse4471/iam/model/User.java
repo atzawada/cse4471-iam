@@ -9,11 +9,7 @@ import lombok.Data;
 @Data
 @Table("USER")
 public class User {
-    @Id
-    @Column("username")
     private String username;
-
-    @Column("password") 
     private String password;
 
 }

@@ -2,8 +2,15 @@ package edu.osu.cse4471.iam.service;
 
 import org.springframework.stereotype.Component;
 
+import edu.osu.cse4471.iam.model.Role;
+
 @Component
 public class RoleService {
+
+    public Role getRole(String roleName) {
+        return null;
+    }
+
     public boolean addRole(String shortname, String roleName) {
         return true;
     }
@@ -16,7 +23,7 @@ public class RoleService {
         return true;
     }
 
-    public boolean deleteRole(String shortname, String roleName) {
+    public boolean deleteRole(String roleName) {
         return true;
     }
 
