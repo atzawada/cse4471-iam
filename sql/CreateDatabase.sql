@@ -45,10 +45,11 @@ ENGINE = InnoDB;
 -- Table `mydb`.`rules`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`rules` (
-  `user` VARCHAR(45) NULL,
-  `role` VARCHAR(45) NULL,
+  `user` VARCHAR(45) NOT NULL,
+  `role` VARCHAR(45) NOT NULL,
   INDEX `username_idx` (`user` ASC) VISIBLE,
   INDEX `role_idx` (`role` ASC) VISIBLE,
+  PRIMARY KEY (`user`, `role`),
   CONSTRAINT `username`
     FOREIGN KEY (`user`)
     REFERENCES `mydb`.`user` (`username`)
