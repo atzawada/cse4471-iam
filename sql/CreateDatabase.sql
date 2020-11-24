@@ -15,26 +15,6 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role` (
-  `name` INT NOT NULL,
-  PRIMARY KEY (`name`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`rules`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`rules` (
-  `name` VARCHAR(45) NOT NULL,
-  `user` VARCHAR(45) NULL,
-  `role` VARCHAR(45) NULL,
-  PRIMARY KEY (`name`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`user` (
@@ -43,6 +23,44 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user` (
   `password` VARCHAR(32) NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`));
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`role` (
+  `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(150) NULL,
+  `owner` VARCHAR(45) NULL,
+  PRIMARY KEY (`name`),
+  INDEX `user_idx` (`owner` ASC) VISIBLE,
+  CONSTRAINT `user`
+    FOREIGN KEY (`owner`)
+    REFERENCES `mydb`.`user` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`rules`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`rules` (
+  `user` VARCHAR(45) NULL,
+  `role` VARCHAR(45) NULL,
+  INDEX `username_idx` (`user` ASC) VISIBLE,
+  INDEX `role_idx` (`role` ASC) VISIBLE,
+  CONSTRAINT `username`
+    FOREIGN KEY (`user`)
+    REFERENCES `mydb`.`user` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `rolename`
+    FOREIGN KEY (`role`)
+    REFERENCES `mydb`.`role` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
