@@ -25,13 +25,14 @@ public class IamController {
     UserService userService;
 
     @PostMapping("/createAccount")
-    public void createAccount(@RequestParam String shortname, @RequestParam String fullName, HttpServletResponse response) {
-        
-    }
+    public void createAccount(@RequestParam String shortname, @RequestParam String password, @RequestParam String fullName, @RequestParam String email, HttpServletResponse response) {
+        boolean status = userService.createAccount(shortname, shortname, password);
 
-    @PostMapping("/login")
-    public void login(@RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
-
+        if (status) {
+            response.setStatus(200);
+        } else {
+            response.setStatus(400);
+        }
     }
 
     @PostMapping("/addRole")
@@ -97,7 +98,7 @@ public class IamController {
 
     @GetMapping("/getMembers")
     public void getGroupMembers(@RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
-        
+
     }
 
     private boolean checkModifyRoleStatus(String username, String password, String roleName, HttpServletResponse response) {
@@ -115,7 +116,7 @@ public class IamController {
             return false;
         }
 
-        if (!role.getAdmin().getShortName().equals(requestor.getShortName())) {
+        if (!role.getAdmin().getUsername().equals(requestor.getUsername())) {
             response.setStatus(403);
             return false;
         }
