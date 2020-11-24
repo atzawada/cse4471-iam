@@ -18,13 +18,14 @@ public class UserDao {
     }
 
     public User getUser(String username) {
-        this.jdbcTemplate.queryForObject("SELECT * FROM mydb.user WHERE USERNAME = :username", (rs, rownum) -> {
-            return new User();
+        return this.jdbcTemplate.queryForObject("SELECT * FROM mydb.user WHERE username = :username", (rs, rownum) -> {
+            return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"));
         }, username);
-        return null;
     }
 
     public User authenticate(String username, String password) {
-        return null;
+        return this.jdbcTemplate.queryForObject("SELECT * FROM mydb.user WHERE username = :username AND password = :password", (rs, rownum) -> {
+            return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+        }, username, password);
     }
 }

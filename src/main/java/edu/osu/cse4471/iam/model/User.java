@@ -1,17 +1,18 @@
 package edu.osu.cse4471.iam.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
 import lombok.Data;
 
 @Data
-@Table("USER")
 public class User {
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     private String username;
     private String password;
-
+    private String email;
 }
 
 

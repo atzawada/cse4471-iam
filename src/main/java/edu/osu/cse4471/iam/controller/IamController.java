@@ -26,7 +26,7 @@ public class IamController {
 
     @PostMapping("/createAccount")
     public void createAccount(@RequestParam String shortname, @RequestParam String password, @RequestParam String fullName, @RequestParam String email, HttpServletResponse response) {
-        boolean status = userService.createAccount(shortname, shortname, password);
+        boolean status = userService.createAccount(shortname, shortname, password, email);
 
         if (status) {
             response.setStatus(200);
@@ -102,7 +102,7 @@ public class IamController {
     }
 
     private boolean checkModifyRoleStatus(String username, String password, String roleName, HttpServletResponse response) {
-        User requestor = userService.login(username, password);
+        User requestor = userService.authenticate(username, password);
 
         if (requestor == null) {
             response.setStatus(401);
@@ -116,7 +116,7 @@ public class IamController {
             return false;
         }
 
-        if (!role.getAdmin().getUsername().equals(requestor.getUsername())) {
+        if (!role.getAdmin().equals(requestor.getUsername())) {
             response.setStatus(403);
             return false;
         }
