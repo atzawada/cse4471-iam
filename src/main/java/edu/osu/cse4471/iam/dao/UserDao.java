@@ -22,9 +22,9 @@ public class UserDao {
             return new User();
         }, username);
         return null;
-    } 
+    }
 
-    public void deleteUser() {
-        
+    public User authenticate(String username, String password) {
+        return null;
     }
 }

@@ -7,10 +7,9 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.Data;
 
 @Data
-@Table("ROLE")
 public class Role {
     private String name;
     private String description;
-    private User admin;
+    private String admin;
     private List<User> members;
 }
