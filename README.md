@@ -140,10 +140,10 @@ Retrieves the list of users that are members of a role.
 
 * `200 OK`: The request has processed successfully. The response will contain the shortname of the owner and a list of shortnames of all the members:
 ```json
-[
+{
     "owner": "",
     "users": []
-]
+}
 ```
 * `400 BAD REQUEST`: The role does not exist. 
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
@@ -165,8 +165,7 @@ Gets a list of all roles and their owners.
 ```json
 {
     "role-one": "owner1",
-    "role-two": "owner2",
-    ...
+    "role-two": "owner2"
 }
 ```
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
@@ -189,8 +188,7 @@ Gets a list of role memberships for a user.
 ```json
 {   "roles": {
         "role-one": "owner1",
-        "role-two": "owner2",
-        ...
+        "role-two": "owner2"
     },
     "user":""
 }
