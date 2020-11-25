@@ -27,6 +27,8 @@ ___note:___ This is just hosted for demonstration purposes and is not guaranteed
 * `200 OK`: The account is created, no response body will be returned.
 * `400 BAD REQUEST`: The username does not meet length or composition requirements, already exists, or the password is a zero-length string.
 
+---
+
 ### POST `/iam/addRole`
 
 Adds a role to the user specified. The requesting shortname must be the owner of the role to make the request.
@@ -44,6 +46,8 @@ Adds a role to the user specified. The requesting shortname must be the owner of
 * `400 BAD REQUEST`: The user or the role specified do not exist.
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
 * `403 FORBIDDEN`: The requestor is not an owner of the role specified.
+
+---
 
 ### POST `/iam/removeRole`
 
@@ -63,6 +67,8 @@ Removes a role from the user specified. The requesting shortname must be the own
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
 * `403 FORBIDDEN`: The requestor is not an owner of the role specified.
 
+---
+
 ### POST `/iam/createRole`
 
 Creates a role in the system. The requesting shortname will become the owner of this new role.
@@ -79,6 +85,8 @@ Creates a role in the system. The requesting shortname will become the owner of 
 * `200 OK`: The role has been added created, no response body will be returned.
 * `400 BAD REQUEST`: The role name is empty, or does not meet kebab-case specification. 
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
+
+---
 
 ### POST `/iam/deleteRole`
 
@@ -97,6 +105,8 @@ Removes a role from the system.
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
 * `403 FORBIDDEN`: The requestor is not the owner of the role to be deleted.
 
+---
+
 ### GET `/iam/authenticate`
 
 Checks to see if a user is a member of a role.
@@ -113,6 +123,8 @@ Checks to see if a user is a member of a role.
 * `200 OK`: The request has processed successfully. Returns a boolean value for the result of the request.
 * `400 BAD REQUEST`: The role or user does not exist. 
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
+
+---
 
 ### GET `/iam/getMembers`
 
@@ -136,6 +148,8 @@ Retrieves the list of users that are members of a role.
 * `400 BAD REQUEST`: The role does not exist. 
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
 
+---
+
 ### GET `/iam/getAllRoles`
 
 Gets a list of all roles and their owners.
@@ -156,6 +170,8 @@ Gets a list of all roles and their owners.
 }
 ```
 * `401 UNAUTHORIZED`: The requestors credentials are invalid.
+
+---
 
 ### GET `/iam/getRoles`
 
