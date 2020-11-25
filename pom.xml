@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>edu.osu.cse4471</groupId>
 	<artifactId>iam-tools</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>iam-tool</name>
+	<version>0.0.1</version>
+	<name>iam-tools</name>
 	<description>IAM tool for OSU CSE 4471 project submission.</description>
 
 	<properties>
