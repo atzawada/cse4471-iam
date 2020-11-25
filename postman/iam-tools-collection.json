@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fullName\": \"Jacob Leblanc\",\r\n    \"shortname\": \"leblanc1\",\r\n    \"email\": \"leblanc1@nationwide.com\",\r\n    \"password\": \"TestPassword\"\r\n}",
+					"raw": "{\r\n    \"fullName\": \"Jacob Leblanc\",\r\n    \"shortname\": \"leblanc1\",\r\n    \"email\": \"leblanc1@example.com\",\r\n    \"password\": \"TestPassword\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
