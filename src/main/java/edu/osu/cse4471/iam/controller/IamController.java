@@ -2,6 +2,10 @@ package edu.osu.cse4471.iam.controller;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.lambdaexpression.annotation.RequestBodyParam;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +28,11 @@ public class IamController {
     @Autowired
     UserService userService;
 
+    private static Log LOG = LogFactory.getLog(IamController.class);
+
     @PostMapping("/createAccount")
-    public void createAccount(@RequestParam String shortname, @RequestParam String password, @RequestParam String fullName, @RequestParam String email, HttpServletResponse response) {
-        boolean status = userService.createAccount(shortname, shortname, password, email);
+    public void createAccount(@RequestBodyParam String shortname, @RequestBodyParam String password, @RequestBodyParam String fullName, @RequestBodyParam String email, HttpServletResponse response) {
+        boolean status = userService.createAccount(fullName, shortname, password, email);
 
         if (status) {
             response.setStatus(200);
@@ -105,6 +111,7 @@ public class IamController {
         User requestor = userService.authenticate(username, password);
 
         if (requestor == null) {
+            LOG.info("Login request for " + username + " is invalid.");
             response.setStatus(401);
             return false;
         }
@@ -112,11 +119,13 @@ public class IamController {
         Role role = roleService.getRole(roleName);
         
         if (role == null) {
+            LOG.info("Role request for " + roleName + " is invalid.");
             response.setStatus(400);
             return false;
         }
 
         if (!role.getAdmin().equals(requestor.getUsername())) {
+            LOG.info("Requestor " + requestor.getUsername() + " is not admin for role " + role.getAdmin() + ".");
             response.setStatus(403);
             return false;
         }

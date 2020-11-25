@@ -16,6 +16,7 @@ public class UserService {
         try {
             userDao.createUser(shortname, password, email);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -26,6 +27,7 @@ public class UserService {
         try {
             return userDao.authenticate(shortname, password);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
