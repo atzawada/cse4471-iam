@@ -56,6 +56,16 @@ public class RoleDao {
         }, roleName);
     }
 
+    public List<Role> getAllRoles() {
+        return this.jdbcTemplate.query("SELECT * FROM iam.role", (rs, rownum) -> {
+            return new Role(rs.getString("name"), rs.getString("description"), rs.getString("owner"));
+        });
+    }
 
+    public List<Role> getAllRolesForUser(String shortname) {
+        return this.jdbcTemplate.query("SELECT * FROM iam.rules INNER JOIN iam.role on iam.rules.role = iam.role.name WHERE user = ?", (rs, rownum) -> {
+            return new Role(rs.getString("name"), rs.getString("description"), rs.getString("owner"));
+        }, shortname);
+    }
     
 }

@@ -81,4 +81,22 @@ public class RoleService {
             return false;
         }
     }
+
+    public List<Role> getAllRoles() {
+        try {
+            return roleDao.getAllRoles();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Role> getRoles(String user) {
+        try {
+            return roleDao.getAllRolesForUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -2,7 +2,9 @@ package edu.osu.cse4471.iam.controller;
 
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.io.IOException;
 
@@ -173,7 +175,7 @@ public class IamController {
         boolean status = roleService.deleteRole(roleName);
 
         if (status) {
-            LOG.info("User deleted: " + roleName);
+            LOG.info("Role deleted: " + roleName);
             response.setStatus(200);
         } else {
             LOG.info("Unable to delete role: " + roleName);
@@ -225,13 +227,53 @@ public class IamController {
     }
 
     @GetMapping("/getAllRoles")
-    public void getAllRoles(@RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) {
+    public Map<String, String> getAllRoles(@RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+        User requestor = userService.authenticate(shortname, password);
 
+        if (requestor == null) {
+            LOG.info("Login request for " + shortname + " is invalid.");
+            response.setStatus(401);
+            return null;
+        }
+
+        List<Role> roles = roleService.getAllRoles();
+
+        LOG.info("Retrieving all roles for user: " + shortname);
+        Map<String, String> roleMap = new HashMap<String, String>();
+
+        for (Role role : roles) {
+            roleMap.put(role.getName(), role.getAdmin());
+        }
+
+        return roleMap;
     }
 
     @GetMapping("/getRoles")
-    public void getRoles(@RequestBodyParam String user, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) {
+    public Map<String, String> getRoles(@RequestParam String user, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+        User requestor = userService.authenticate(shortname, password);
 
+        if (requestor == null) {
+            LOG.info("Login request for " + shortname + " is invalid.");
+            response.setStatus(401);
+            return null;
+        }
+
+        if (!userService.userExists(user)) {
+            LOG.info("Specified user: " + user + " does not exist.");
+            response.setStatus(400);
+            return null;
+        }
+
+        List<Role> roles = roleService.getRoles(user);
+
+        LOG.info("Retrieving memberships for user: " + user + " initiated by: " + shortname);
+        Map<String, String> roleMap = new HashMap<String, String>();
+
+        for (Role role : roles) {
+            roleMap.put(role.getName(), role.getAdmin());
+        }
+
+        return roleMap;
     }
 
     private boolean checkModifyRoleStatus(String username, String password, String roleName, HttpServletResponse response) {

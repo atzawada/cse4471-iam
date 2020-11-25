@@ -31,4 +31,14 @@ public class UserService {
             return null;
         }
     }
+
+    public boolean userExists(String shortname) {
+        try {
+            User user = userDao.getUser(shortname);
+            return user != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
