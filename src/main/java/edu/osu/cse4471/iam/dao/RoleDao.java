@@ -46,7 +46,7 @@ public class RoleDao {
     }
 
     public boolean checkRule(String user, String role) {
-        SqlRowSet rs = this.jdbcTemplate.queryForRowSet("SELECT * FROM iam.rules WHERE NAME = ? AND ROLE = ?", new Object[] {user, role});
+        SqlRowSet rs = this.jdbcTemplate.queryForRowSet("SELECT * FROM iam.rules WHERE user = ? AND role = ?", new Object[] {user, role});
         return rs.next();
     }
 

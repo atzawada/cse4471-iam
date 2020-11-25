@@ -1,6 +1,8 @@
 package edu.osu.cse4471.iam.controller;
 
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.io.IOException;
 
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.osu.cse4471.iam.model.Role;
@@ -69,6 +72,7 @@ public class IamController {
         boolean status = userService.createAccount(fullName, shortname, password, email);
 
         if (status) {
+            LOG.info("User created: " + shortname);
             response.setStatus(200);
         } else {
             LOG.info("User already exists: " + shortname);
@@ -77,36 +81,47 @@ public class IamController {
     }
 
     @PostMapping("/addRole")
-    public void addRole(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
-        boolean isAllowed = checkModifyRoleStatus(username, password, roleName, response);
+    public void addRole(@RequestBodyParam String user, @RequestBodyParam String roleName, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) throws IOException {
+        boolean isAllowed = checkModifyRoleStatus(shortname, password, roleName, response);
         
         if (!isAllowed) {
             return;
         }
 
-        boolean status = roleService.addRole(shortname, roleName);
+        boolean status = roleService.addRole(user, roleName);
 
         if (status) {
+            LOG.info("Role: " + roleName + " added to user: " + user + " by owner: " + shortname);
             response.setStatus(200);
         } else {
-            response.setStatus(400);
+            LOG.info("Error adding role: " + roleName + " to user: " + user + " by owner: " + shortname);
+            response.sendError(400, "Error adding role.");
         }
     }
     
     @PostMapping("/removeRole")
-    public void removeRole(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
-        boolean isAllowed = checkModifyRoleStatus(username, password, roleName, response);
+    public void removeRole(@RequestBodyParam String user, @RequestBodyParam String roleName, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) throws IOException {
+        boolean isAllowed = checkModifyRoleStatus(shortname, password, roleName, response);
         
         if (!isAllowed) {
             return;
         }
 
-        boolean status = roleService.removeRole(shortname, roleName);
+        boolean hasAccess = roleService.checkAccess(user, roleName);
+        boolean status;
+
+        if (hasAccess) {
+            status = roleService.removeRole(user, roleName);
+        } else {
+            status = false;
+        }
 
         if (status) {
+            LOG.info("Role: " + roleName + " removed from user: " + user + " by owner: " + shortname);
             response.setStatus(200);
         } else {
-            response.setStatus(400);
+            LOG.info("Error removing role: " + roleName + " from user: " + user + " by owner: " + shortname);
+            response.sendError(400, "Error removing role.");
         }
     }
 
@@ -139,6 +154,7 @@ public class IamController {
         boolean status = roleService.createRole(roleName, description, shortname);
 
         if (status) {
+            LOG.info("Role created: " + roleName);
             response.setStatus(200);
         } else {
             LOG.info("Unable to create role: " + roleName);
@@ -157,6 +173,7 @@ public class IamController {
         boolean status = roleService.deleteRole(roleName);
 
         if (status) {
+            LOG.info("User deleted: " + roleName);
             response.setStatus(200);
         } else {
             LOG.info("Unable to delete role: " + roleName);
@@ -165,12 +182,55 @@ public class IamController {
     }
 
     @GetMapping("/authenticate")
-    public boolean authenticate(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
-        return false;
+    public boolean authenticate(@RequestParam String user, @RequestParam String roleName, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+        User requestor = userService.authenticate(shortname, password);
+
+        if (requestor == null) {
+            LOG.info("Login request for " + shortname + " is invalid.");
+            response.setStatus(401);
+            return false;
+        }
+
+        response.setStatus(200);
+        return roleService.checkAccess(user, roleName);
     }
 
     @GetMapping("/getMembers")
-    public void getGroupMembers(@RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
+    public Object[] getGroupMembers(@RequestParam String roleName, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+        User requestor = userService.authenticate(shortname, password);
+
+        if (requestor == null) {
+            LOG.info("Login request for " + shortname + " is invalid.");
+            response.setStatus(401);
+            return null;
+        }
+
+        Role role = roleService.getRole(roleName);
+        
+        if (role == null) {
+            LOG.info("Role request for " + roleName + " is invalid.");
+            response.setStatus(400);
+            return null;
+        }
+
+        LOG.info("Retrieving members of role: " + roleName + " for user: " + shortname);
+        List<User> users = roleService.getGroupMembers(roleName);
+        List<String> usernames = new ArrayList<String>();
+
+        for (User user : users) {
+            usernames.add(user.getUsername());
+        }
+
+        return new Object[] {role.getAdmin(), usernames.toArray()};
+    }
+
+    @GetMapping("/getAllRoles")
+    public void getAllRoles(@RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) {
+
+    }
+
+    @GetMapping("/getRoles")
+    public void getRoles(@RequestBodyParam String user, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) {
 
     }
 
