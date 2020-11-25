@@ -1,0 +1,14 @@
+{
+	"id": "39757e01-185e-49e3-a3eb-9b9f72242b94",
+	"name": "iam-tools beta",
+	"values": [
+		{
+			"key": "iam-endpoint",
+			"value": "server.atzawada.io:8888",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2020-11-25T06:24:17.044Z",
+	"_postman_exported_using": "Postman/7.36.0"
+}
