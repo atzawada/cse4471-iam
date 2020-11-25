@@ -198,7 +198,7 @@ public class IamController {
     }
 
     @GetMapping("/getMembers")
-    public Object[] getGroupMembers(@RequestParam String roleName, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+    public Map<String, Object> getGroupMembers(@RequestParam String roleName, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
         User requestor = userService.authenticate(shortname, password);
 
         if (requestor == null) {
@@ -218,12 +218,15 @@ public class IamController {
         LOG.info("Retrieving members of role: " + roleName + " for user: " + shortname);
         List<User> users = roleService.getGroupMembers(roleName);
         List<String> usernames = new ArrayList<String>();
+        Map<String, Object> responseData = new HashMap<String, Object>();
 
         for (User user : users) {
             usernames.add(user.getUsername());
         }
 
-        return new Object[] {role.getAdmin(), usernames.toArray()};
+        responseData.put("owner", role.getAdmin());
+        responseData.put("users", usernames.toArray());
+        return responseData;
     }
 
     @GetMapping("/getAllRoles")
@@ -249,7 +252,7 @@ public class IamController {
     }
 
     @GetMapping("/getRoles")
-    public Map<String, String> getRoles(@RequestParam String user, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
+    public Map<String, Object> getRoles(@RequestParam String user, @RequestParam String shortname, @RequestParam String password, HttpServletResponse response) {
         User requestor = userService.authenticate(shortname, password);
 
         if (requestor == null) {
@@ -268,12 +271,16 @@ public class IamController {
 
         LOG.info("Retrieving memberships for user: " + user + " initiated by: " + shortname);
         Map<String, String> roleMap = new HashMap<String, String>();
+        Map<String, Object> responseData = new HashMap<String, Object>();
 
         for (Role role : roles) {
             roleMap.put(role.getName(), role.getAdmin());
         }
 
-        return roleMap;
+        responseData.put("user", user);
+        responseData.put("roles", roleMap);
+
+        return responseData;
     }
 
     private boolean checkModifyRoleStatus(String username, String password, String roleName, HttpServletResponse response) {
