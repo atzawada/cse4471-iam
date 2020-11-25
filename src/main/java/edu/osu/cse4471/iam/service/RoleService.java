@@ -19,6 +19,7 @@ public class RoleService {
         try {
             return roleDao.getRole(roleName);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -28,6 +29,7 @@ public class RoleService {
             roleDao.createRule(shortname, roleName);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -37,6 +39,7 @@ public class RoleService {
             roleDao.deleteRule(shortname, roleName);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -46,6 +49,7 @@ public class RoleService {
             roleDao.createRole(roleName, roleDescription, roleOwner);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -55,6 +59,7 @@ public class RoleService {
             roleDao.deleteRole(roleName);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -63,6 +68,7 @@ public class RoleService {
         try {
             return roleDao.getGroupMembers(roleName);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -71,6 +77,7 @@ public class RoleService {
         try {
             return roleDao.checkRule(shortname, roleName);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

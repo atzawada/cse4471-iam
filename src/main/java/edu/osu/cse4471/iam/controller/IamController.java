@@ -1,5 +1,9 @@
 package edu.osu.cse4471.iam.controller;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.lambdaexpression.annotation.RequestBodyParam;
@@ -10,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.osu.cse4471.iam.model.Role;
@@ -29,20 +32,52 @@ public class IamController {
     UserService userService;
 
     private static Log LOG = LogFactory.getLog(IamController.class);
+    Pattern kebabCase = Pattern.compile("^[a-z]+(-[a-z]+)*$");
+    Pattern usernameCase = Pattern.compile("[a-z]+[0-9]+");
 
     @PostMapping("/createAccount")
-    public void createAccount(@RequestBodyParam String shortname, @RequestBodyParam String password, @RequestBodyParam String fullName, @RequestBodyParam String email, HttpServletResponse response) {
+    public void createAccount(@RequestBodyParam String shortname, @RequestBodyParam String password, @RequestBodyParam String fullName, @RequestBodyParam String email, HttpServletResponse response) throws IOException {
+        if (shortname.length() < 6) {
+            LOG.info("Shortname is < 6 characters: " + shortname);
+            response.sendError(400, "Shortname must be at least 6 characters.");
+
+            return;
+        }
+
+        if (password.length() < 6) {
+            LOG.info("Password is < 6 characters: " + password);
+            response.sendError(400, "Password must be at least 6 characters.");
+
+            return;
+        }
+
+        if (email.length() < 0) {
+            LOG.info("Email is 0 characters.");
+            response.sendError(400, "Email must be at least 1 character.");
+
+            return;
+        }
+
+        Matcher m = usernameCase.matcher(shortname);
+        if (!m.matches()) {
+            LOG.info("Shortname does not match case constraints: " + shortname);
+            response.sendError(400, "Shortname must be lowercase letters followed by numbers.");
+            
+            return;
+        }
+
         boolean status = userService.createAccount(fullName, shortname, password, email);
 
         if (status) {
             response.setStatus(200);
         } else {
-            response.setStatus(400);
+            LOG.info("User already exists: " + shortname);
+            response.sendError(400, "Shortname already exists");
         }
     }
 
     @PostMapping("/addRole")
-    public void addRole(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
+    public void addRole(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
         boolean isAllowed = checkModifyRoleStatus(username, password, roleName, response);
         
         if (!isAllowed) {
@@ -59,7 +94,7 @@ public class IamController {
     }
     
     @PostMapping("/removeRole")
-    public void removeRole(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
+    public void removeRole(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
         boolean isAllowed = checkModifyRoleStatus(username, password, roleName, response);
         
         if (!isAllowed) {
@@ -76,13 +111,44 @@ public class IamController {
     }
 
     @PostMapping("/createRole")
-    public void createRole(@RequestParam String roleName, @RequestParam String description, @RequestParam String username, @RequestParam String password) {
+    public void createRole(@RequestBodyParam String roleName, @RequestBodyParam String description, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) throws IOException {
+        User requestor = userService.authenticate(shortname, password);
 
+        if (requestor == null) {
+            LOG.info("Login request for " + shortname + " is invalid.");
+            response.setStatus(401);
+            return;
+        }
+
+        Matcher m = kebabCase.matcher(roleName);
+
+        if (roleName.length() < 0) {
+            LOG.info("roleName is 0 characters.");
+            response.sendError(400, "Role name must be at least 1 character.");
+
+            return;
+        }
+
+        if (!m.matches()) {
+            LOG.info("Role name does not follow kebab-case: " + roleName);
+            response.sendError(400, "Role name does not follow kebab-case.");
+            
+            return;
+        }
+
+        boolean status = roleService.createRole(roleName, description, shortname);
+
+        if (status) {
+            response.setStatus(200);
+        } else {
+            LOG.info("Unable to create role: " + roleName);
+            response.sendError(400, "Unable to create role");
+        }
     }
 
     @PostMapping("/deleteRole")
-    public void deleteRole(@RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
-        boolean isAllowed = checkModifyRoleStatus(username, password, roleName, response);
+    public void deleteRole(@RequestBodyParam String roleName, @RequestBodyParam String shortname, @RequestBodyParam String password, HttpServletResponse response) throws IOException {
+        boolean isAllowed = checkModifyRoleStatus(shortname, password, roleName, response);
         
         if (!isAllowed) {
             return;
@@ -93,17 +159,18 @@ public class IamController {
         if (status) {
             response.setStatus(200);
         } else {
-            response.setStatus(400);
+            LOG.info("Unable to delete role: " + roleName);
+            response.sendError(400, "Unable to delete role");
         }
     }
 
     @GetMapping("/authenticate")
-    public boolean authenticate(@RequestParam String shortname, @RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
+    public boolean authenticate(@RequestBodyParam String shortname, @RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
         return false;
     }
 
     @GetMapping("/getMembers")
-    public void getGroupMembers(@RequestParam String roleName, @RequestParam String username, @RequestParam String password, HttpServletResponse response) {
+    public void getGroupMembers(@RequestBodyParam String roleName, @RequestBodyParam String username, @RequestBodyParam String password, HttpServletResponse response) {
 
     }
 
