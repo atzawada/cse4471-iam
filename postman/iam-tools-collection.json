@@ -1,0 +1,273 @@
+{
+	"info": {
+		"_postman_id": "005b772e-9fe6-4dec-b4f9-813e5a51f5b5",
+		"name": "iam-tools",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\": \"Jacob Leblanc\",\r\n    \"shortname\": \"leblanc1\",\r\n    \"email\": \"leblanc1@nationwide.com\",\r\n    \"password\": \"TestPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/createAccount",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"createAccount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Role to Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shortname\": \"zawada1\",\r\n    \"password\": \"TestPassword\",\r\n    \"user\": \"kappel1\",\r\n    \"roleName\": \"test-role\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/addRole",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"addRole"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Role From Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shortname\": \"zawada1\",\r\n    \"password\": \"TestPassword\",\r\n    \"user\": \"leblanc1\",\r\n    \"roleName\": \"test-role\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/removeRole",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"removeRole"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shortname\": \"zawada1\",\r\n    \"password\": \"TestPassword\",\r\n    \"roleName\": \"test-role-two\",\r\n    \"description\": \"A test role for the API\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/createRole",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"createRole"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shortname\": \"zawada1\",\r\n    \"password\": \"TestPassword\",\r\n    \"roleName\": \"test-role\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/deleteRole",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"deleteRole"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Role Access",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/authenticate?user=leblanc1&roleName=test-role&shortname=zawada1&password=TestPassword",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"authenticate"
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "leblanc1"
+						},
+						{
+							"key": "roleName",
+							"value": "test-role"
+						},
+						{
+							"key": "shortname",
+							"value": "zawada1"
+						},
+						{
+							"key": "password",
+							"value": "TestPassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Role Members",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/getMembers?roleName=test-role-two&shortname=zawada1&password=testPassword",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"getMembers"
+					],
+					"query": [
+						{
+							"key": "roleName",
+							"value": "test-role-two"
+						},
+						{
+							"key": "shortname",
+							"value": "zawada1"
+						},
+						{
+							"key": "password",
+							"value": "testPassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Roles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/getAllRoles?shortname=zawada1&password=testPassword",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"getAllRoles"
+					],
+					"query": [
+						{
+							"key": "shortname",
+							"value": "zawada1"
+						},
+						{
+							"key": "password",
+							"value": "testPassword"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Roles For Member",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{iam-endpoint}}/iam/getRoles?shortname=zawada1&password=testPassword&user=leblanc1",
+					"host": [
+						"{{iam-endpoint}}"
+					],
+					"path": [
+						"iam",
+						"getRoles"
+					],
+					"query": [
+						{
+							"key": "shortname",
+							"value": "zawada1"
+						},
+						{
+							"key": "password",
+							"value": "testPassword"
+						},
+						{
+							"key": "user",
+							"value": "leblanc1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

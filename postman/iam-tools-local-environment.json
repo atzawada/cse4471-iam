@@ -1,0 +1,14 @@
+{
+	"id": "de8daafa-6c95-4afb-8fa4-73fe8790eee0",
+	"name": "iam-tools local",
+	"values": [
+		{
+			"key": "iam-endpoint",
+			"value": "localhost:8080",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2020-11-25T05:31:20.649Z",
+	"_postman_exported_using": "Postman/7.36.0"
+}
